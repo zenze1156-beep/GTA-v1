@@ -14,6 +14,7 @@ const C = {
   MIN: BigInt(process.env.MIN_AMOUNT_WEI || '30000000000000000000'),
   WIN: Number(process.env.BLOCK_WINDOW || 1800),
   FILE: path.resolve(process.env.FILE || './secret/GTA-VI.zip'),
+  PUB: path.resolve('./public'),
   DB: path.resolve('./data/db.json'),
   TGT: process.env.TG_TOKEN || '',
   TGA: process.env.TG_ADMIN || '',
@@ -58,6 +59,7 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(express.json({ limit: '8kb' }));
 
+/* Pick one of three variants and remember it */
 app.use((req, res, next) => {
   const m = (req.headers.cookie || '').match(/v=([abc])/);
   let v = m ? m[1] : (req.query.v && 'abc'.includes(req.query.v) ? req.query.v : 'abc'[Math.floor(Math.random() * 3)]);
@@ -66,14 +68,14 @@ app.use((req, res, next) => {
   next();
 });
 
-// இங்கே தான் முக்கிய மாற்றம். ரூட் ஃபோல்டர்ல இருந்து நேரடியா index.html எடுக்கிறோம்
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+// இங்கே தான் நான் மாற்றம் செய்திருக்கேன். 'public' ஃபோல்டருக்கு உள்ளே தேடச் சொல்கிறோம்.
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
-// a.html-க்கு 
-app.get('/access', (req, res) => res.sendFile(path.join(__dirname, 'a.html')));
+app.get('/access', (req, res) => res.sendFile(path.join(__dirname, 'public', 'a.html')));
 
-// CSS, JS, Images எல்லாம் சரியா லோட் ஆக
+// CSS, JS, Images எல்லாத்தையும் ரூட் மற்றும் public ஃபோல்டர்ல இருந்து லோட் பண்ண
 app.use(express.static(__dirname)); 
+app.use(express.static(C.PUB)); 
 
 app.post('/api/track', (req, res) => {
   if (!rl(req.ip, 120)) return res.json({ ok: 1 });
