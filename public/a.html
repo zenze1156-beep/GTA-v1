@@ -42,17 +42,17 @@
             letter-spacing: 4px; color: #d4af37;
         }
 
-        /* ZIP file icon design (க்ளிக் பண்ண கூடியது) */
+        /* ZIP file icon design */
         .zip-container {
             position: absolute; top: 55%; left: 20%;
             transform: translate(-50%, -50%);
-            display: none; /* ஆரம்பத்துல மறைஞ்சு இருக்கும் */
+            display: none; 
             align-items: center; gap: 15px;
             background: rgba(0, 0, 0, 0.85); padding: 12px 25px;
             border-radius: 8px; border: 2px solid #ffd700;
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), inset 0 0 10px rgba(255, 215, 0, 0.2);
             z-index: 10;
-            cursor: pointer; /* கை கர்சர் வரும் */
+            cursor: pointer; 
             transition: all 0.3s ease;
         }
         .zip-container:hover {
@@ -209,13 +209,48 @@
         .verify-btn:hover { background: #fff; box-shadow: 0 0 20px #d4af37; }
         #statusMsg { margin-top: 10px; font-weight: bold; color: #ff9800; font-size: 14px;}
 
-        @media (max-width: 700px) {
-            h1 { font-size: 26px; letter-spacing: 2px; }
-            .zip-container { left: 50%; top: 30%; }
-            .license-wrapper { left: 15px; right: 15px; bottom: 55px; }
-            .wallet-prompt-text { white-space: normal; font-size: 14px; }
-            .premium-license { font-size: 16px; padding: 10px 16px; }
-            .payment-modal { right: 50%; transform: translate(50%, -50%); width: 90%; }
+        /* மொபைல் வியூ (Mobile View) */
+        @media (max-width: 768px) {
+            h1 { font-size: 26px; letter-spacing: 2px; margin-top: 20px; }
+            
+            .zip-container { 
+                left: 50%; 
+                top: 20%; 
+                transform: translate(-50%, -50%);
+                scale: 0.9;
+            }
+
+            .license-wrapper { 
+                left: 5%; 
+                right: 5%; 
+                bottom: 40px; 
+                align-items: center;
+            }
+
+            .wallet-prompt-text { 
+                white-space: normal; 
+                font-size: 14px; 
+                text-align: center;
+            }
+
+            .premium-license { 
+                font-size: 16px; 
+                padding: 10px 16px; 
+                width: 100%;
+                text-align: center;
+            }
+
+            .payment-modal { 
+                right: 50%; 
+                top: 50%;
+                transform: translate(50%, -50%); 
+                width: 90%; 
+                padding: 20px;
+            }
+
+            .wallet-box { font-size: 12px; }
+            
+            .image-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -242,9 +277,9 @@
         <h1>WELCOME TO GTA VI</h1>
     </div>
 
-    <!-- ZIP File (க்ளிக் பண்ண கூடியது) -->
+    <!-- ZIP File -->
     <div class="zip-container" id="zipBox" onclick="openPayment()">
-        <div class="lock-overlay">🔒 UNLOCK</div> <!-- புது லாக் ஐகான் -->
+        <div class="lock-overlay">🔒 UNLOCK</div>
         <svg class="zip-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M20 6H12V4C12 2.89543 11.1046 2 10 2H4C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V8C22 6.89543 21.1046 6 20 6Z" fill="#333" stroke="#ffd700" stroke-width="1.5"/>
             <path d="M12 6V22" stroke="#ffd700" stroke-width="1.5" stroke-dasharray="2 2"/>
@@ -276,7 +311,7 @@
         <p>Send exactly <strong>37 USDT (BSC)</strong> to this address:</p>
         
         <div class="wallet-box">
-           0xCa391A2d4050fA5c5fc6505e003Bfa007bF8821e <!-- இங்கே உங்க வாலெட் அட்ரஸ் -->
+            0xCa391A2d4050fA5c5fc6505e003Bfa007bF8821e
         </div>
         
         <p>Paste your <strong>Transaction Hash (TxID)</strong> below:</p>
@@ -296,12 +331,10 @@
 
     <script>
         function openPayment() {
-            // பேமெண்ட் பாக்ஸ் கீழ இருந்து மேல வரும்
             var modal = document.getElementById('paymentModal');
             modal.style.display = 'flex';
             modal.style.animation = 'slideUpFade 0.5s ease-out forwards';
 
-            // ஜிப் பாக்ஸ்-ம் கீழ இருந்து மேல வரும்
             var zipBox = document.getElementById('zipBox');
             zipBox.style.display = 'flex';
             zipBox.style.animation = 'slideUpZip 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
@@ -311,7 +344,6 @@
             document.getElementById('paymentModal').style.display = 'none';
             document.getElementById('statusMsg').innerText = "";
 
-            // ஜிப் பாக்ஸ்-ஐ மறைக்க
             var zipBox = document.getElementById('zipBox');
             zipBox.style.display = 'none';
         }
