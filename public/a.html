@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTA VI - Welcome</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background-color: #000;
+            color: #d4af37;
+            font-family: 'Courier New', Courier, monospace;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Hide Scrollbar */
+        body::-webkit-scrollbar { display: none; }
+        body { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* GTA 6 images in the background */
+        .image-grid {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 2px; opacity: 0.5; z-index: 1;
+        }
+        .image-grid img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* "WELCOME TO GTA VI" text */
+        .welcome-text {
+            position: absolute; top: 15px; left: 0; width: 100%;
+            text-align: center; z-index: 2;
+        }
+        h1 {
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.9), 0 0 40px rgba(0, 0, 0, 1);
+            font-size: 45px; margin: 0; text-transform: uppercase;
+            letter-spacing: 4px; color: #d4af37;
+        }
+
+        /* ZIP file icon design (க்ளிக் பண்ண கூடியது) */
+        .zip-container {
+            position: absolute; top: 55%; left: 20%;
+            transform: translate(-50%, -50%);
+            display: none; /* ஆரம்பத்துல மறைஞ்சு இருக்கும் */
+            align-items: center; gap: 15px;
+            background: rgba(0, 0, 0, 0.85); padding: 12px 25px;
+            border-radius: 8px; border: 2px solid #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), inset 0 0 10px rgba(255, 215, 0, 0.2);
+            z-index: 10;
+            cursor: pointer; /* கை கர்சர் வரும் */
+            transition: all 0.3s ease;
+        }
+        .zip-container:hover {
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), inset 0 0 20px rgba(255, 215, 0, 0.4);
+            transform: translate(-50%, -50%) scale(1.02);
+        }
+
+        /* புது லாக் ஐகான் */
+        .lock-overlay {
+            position: absolute;
+            top: -10px; right: -10px;
+            background: #ff4444;
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ff4444;
+            animation: pulseLock 1s infinite alternate;
+        }
+        @keyframes pulseLock {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        .zip-icon { width: 40px; height: 40px; filter: drop-shadow(0 0 8px #ffd700); }
+        .zip-text { font-size: 24px; font-weight: 900; color: #ffffff; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); }
+        .zip-label { font-size: 12px; color: #ffd700; display: block; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; text-shadow: 0 0 5px #ffd700; }
+
+        /* Animations */
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(50px); }
+            100% { opacity: 1; transform: translateY(-50%); }
+        }
+        @keyframes slideUpZip {
+            0% { opacity: 0; transform: translate(-50%, 50px); }
+            100% { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        /* Blue river */
+        .river-container {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 120px; 
+            overflow: hidden; z-index: 3; pointer-events: none;
+        }
+        .wave {
+            position: absolute; bottom: 0; left: 0; width: 200%; height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 120" preserveAspectRatio="none"><path d="M0,60 C150,100 350,20 400,60 C450,100 650,20 800,60 L800,120 L0,120 Z" fill="rgba(0, 119, 255, 0.4)"/></svg>');
+            background-size: 50% 100%; animation: waveMove 8s linear infinite;
+        }
+        .wave:nth-child(2) {
+            bottom: -10px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 120" preserveAspectRatio="none"><path d="M0,60 C150,20 350,100 400,60 C450,20 650,100 800,60 L800,120 L0,120 Z" fill="rgba(0, 119, 255, 0.6)"/></svg>');
+            background-size: 50% 100%; animation: waveMove 6s linear infinite reverse;
+        }
+        .wave:nth-child(3) {
+            bottom: -20px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 120" preserveAspectRatio="none"><path d="M0,80 C200,110 300,40 400,80 C500,110 600,40 800,80 L800,120 L0,120 Z" fill="rgba(0, 180, 255, 0.8)"/></svg>');
+            background-size: 50% 100%; animation: waveMove 4s linear infinite;
+        }
+        @keyframes waveMove { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        .glow-line {
+            position: absolute; bottom: 40px; left: 0; width: 100%; height: 2px;
+            background-color: #00b4ff;
+            box-shadow: 0 0 15px 3px #00b4ff, 0 0 30px 6px rgba(0, 119, 255, 0.5);
+            z-index: 4; animation: pulseGlow 2s infinite alternate;
+        }
+        @keyframes pulseGlow {
+            0% { opacity: 0.6; box-shadow: 0 0 10px 2px #00b4ff; }
+            100% { opacity: 1; box-shadow: 0 0 25px 5px #00b4ff, 0 0 40px 10px rgba(0, 119, 255, 0.7); }
+        }
+
+        /* Text and buttons */
+        .license-wrapper {
+            position: absolute; bottom: 60px; left: 30px; z-index: 6;
+            display: flex; flex-direction: column; gap: 12px; 
+        }
+
+        /* பிங்க் நிற டெக்ஸ்ட் */
+        .wallet-prompt-text {
+            font-size: 17px; 
+            font-weight: bold; 
+            color: #ff69b4; 
+            letter-spacing: 0.5px; 
+            text-shadow: 0 0 8px #ff69b4, 0 0 15px #ff1493, 0 0 25px #ff69b4; 
+            white-space: nowrap; 
+            animation: pinkBlink 2s infinite alternate; 
+            margin-bottom: 5px;
+        }
+        @keyframes pinkBlink {
+            0% { color: #ff69b4; text-shadow: 0 0 5px #ff69b4, 0 0 15px #ff1493; }
+            100% { color: #ffb6c1; text-shadow: 0 0 10px #ffb6c1, 0 0 20px #ff69b4, 0 0 30px #ff1493; }
+        }
+
+        .premium-license {
+            background: #000000; border: 3px solid #002266; padding: 12px 25px; 
+            border-radius: 5px; font-size: 22px; font-weight: 900; letter-spacing: 2px;
+            color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.5); 
+            box-shadow: 0 0 20px rgba(0, 34, 102, 0.9), inset 0 0 10px rgba(0, 34, 102, 0.5); 
+            text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; width: fit-content;
+        }
+        .premium-license:hover {
+            box-shadow: 0 0 30px rgba(0, 180, 255, 0.8), inset 0 0 15px rgba(0, 180, 255, 0.5);
+            border-color: #00b4ff;
+        }
+        .highlight { color: #00b4ff; text-shadow: 0 0 10px rgba(0, 180, 255, 0.8); }
+
+        /* Payment Modal (Crystal Clear Glass Effect) */
+        .payment-modal {
+            position: fixed;
+            top: 50%;
+            right: 5%; 
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
+            border: 2px solid rgba(0, 180, 255, 0.6);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 180, 255, 0.3);
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: 90%;
+            max-width: 380px;
+        }
+
+        .payment-modal h2 { color: #fff; font-size: 22px; text-shadow: 0 0 10px #00b4ff; margin-bottom: 10px;}
+        .payment-modal p { color: #fff; font-size: 14px; line-height: 1.5; text-shadow: 0 0 5px #000; }
+        
+        .modal-close {
+            position: absolute; top: 10px; right: 15px; color: #fff; font-size: 24px; cursor: pointer;
+            text-shadow: 0 0 5px #000;
+        }
+        
+        .wallet-box {
+            background: rgba(0, 0, 0, 0.4); padding: 12px; border: 1px solid #d4af37; 
+            color: #00b4ff; font-weight: bold; word-break: break-all; 
+            width: 100%; border-radius: 5px; font-size: 14px; margin-bottom: 10px;
+        }
+
+        .tx-input {
+            width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.5); border: 1px solid #555; color: #fff;
+            border-radius: 5px; font-family: inherit; margin-bottom: 15px; font-size: 14px;
+        }
+        .verify-btn {
+            width: 100%; padding: 15px; background: #d4af37; color: #000; border: none;
+            font-weight: 900; font-size: 16px; text-transform: uppercase; cursor: pointer; border-radius: 5px;
+            transition: 0.3s;
+        }
+        .verify-btn:hover { background: #fff; box-shadow: 0 0 20px #d4af37; }
+        #statusMsg { margin-top: 10px; font-weight: bold; color: #ff9800; font-size: 14px;}
+
+        @media (max-width: 700px) {
+            h1 { font-size: 26px; letter-spacing: 2px; }
+            .zip-container { left: 50%; top: 30%; }
+            .license-wrapper { left: 15px; right: 15px; bottom: 55px; }
+            .wallet-prompt-text { white-space: normal; font-size: 14px; }
+            .premium-license { font-size: 16px; padding: 10px 16px; }
+            .payment-modal { right: 50%; transform: translate(50%, -50%); width: 90%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Images -->
+    <div class="image-grid">
+        <img src="https://www.rockstargames.com/VI/_next/static/media/Jason_Lucia_Rooftop_With_Logos_landscape.04l3xybfa4~6m.jpg?akim=1&imdensity=1&imwidth=3840">
+        <img src="https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_Robbery_With_Logo_landscape.0sjdgaq91u2yn.jpg?akim=1&imdensity=1&imwidth=360">
+        <img src="https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_Motel_landscape.08edvuwtm-20v.jpg?akim=1&imdensity=1&imwidth=3840">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq18Lu7xEnZVkkSt0XQxlQ-WaXSr4aBiGoKEffFdNcek5V1k3OUtm3vLxy&s=10">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnBJj0JwcQsDJG2hjytCNr1OIONUP-Rra9PhGxtvcgfw&s=10">
+        <img src="https://www.rockstargames.com/VI/_next/static/media/Jason_Lucia_Rooftop_With_Logos_landscape.04l3xybfa4~6m.jpg?akim=1&imdensity=1&imwidth=3840">
+        <img src="https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_Motel_landscape.08edvuwtm-20v.jpg?akim=1&imdensity=1&imwidth=3840">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq18Lu7xEnZVkkSt0XQxlQ-WaXSr4aBiGoKEffFdNcek5V1k3OUtm3vLxy&s=10">
+        <img src="https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_Robbery_With_Logo_landscape.0sjdgaq91u2yn.jpg?akim=1&imdensity=1&imwidth=360">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnBJj0JwcQsDJG2hjytCNr1OIONUP-Rra9PhGxtvcgfw&s=10">
+        <img src="https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_Robbery_With_Logo_landscape.0sjdgaq91u2yn.jpg?akim=1&imdensity=1&imwidth=360">
+        <img src="https://www.rockstargames.com/VI/_next/static/media/Jason_Lucia_Rooftop_With_Logos_landscape.04l3xybfa4~6m.jpg?akim=1&imdensity=1&imwidth=3840">
+    </div>
+
+    <!-- Title -->
+    <div class="welcome-text">
+        <h1>WELCOME TO GTA VI</h1>
+    </div>
+
+    <!-- ZIP File (க்ளிக் பண்ண கூடியது) -->
+    <div class="zip-container" id="zipBox" onclick="openPayment()">
+        <div class="lock-overlay">🔒 UNLOCK</div> <!-- புது லாக் ஐகான் -->
+        <svg class="zip-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 6H12V4C12 2.89543 11.1046 2 10 2H4C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V8C22 6.89543 21.1046 6 20 6Z" fill="#333" stroke="#ffd700" stroke-width="1.5"/>
+            <path d="M12 6V22" stroke="#ffd700" stroke-width="1.5" stroke-dasharray="2 2"/>
+            <path d="M10 10H14M10 14H14M10 18H14" stroke="#ffd700" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M10 10L12 8L14 10" fill="#ffd700"/>
+        </svg>
+        <div>
+            <div class="zip-text">188.7 GB</div>
+            <div class="zip-label">ZIP FILE READY</div>
+        </div>
+    </div>
+
+    <!-- License Area -->
+    <div class="license-wrapper">
+        <div class="wallet-prompt-text">
+            🎁 Pay 37 USDT to get access to the Beta Rewards!
+        </div>
+        
+        <div class="premium-license" onclick="openPayment()">
+            LICENSES KEY ACCESS: <span class="highlight">37 USDT</span>
+            <span style="display:block;font-size:11px;letter-spacing:1px;color:#7fd7ff;margin-top:6px;font-weight:700;text-shadow:none;">FILE STARTS IMMEDIATELY</span>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="payment-modal" id="paymentModal">
+        <span class="modal-close" onclick="closePayment()">&times;</span>
+        <h2>Direct Payment</h2>
+        <p>Send exactly <strong>37 USDT (BSC)</strong> to this address:</p>
+        
+        <div class="wallet-box">
+            0x0000000000000000000000000000000000000000 <!-- இங்கே உங்க வாலெட் அட்ரஸ் -->
+        </div>
+        
+        <p>Paste your <strong>Transaction Hash (TxID)</strong> below:</p>
+        <input type="text" class="tx-input" id="txHash" placeholder="0x...">
+        
+        <button class="verify-btn" onclick="verifyTx()">Verify & Download</button>
+        <div id="statusMsg"></div>
+    </div>
+
+    <!-- River -->
+    <div class="river-container" id="riverContainer">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+    <div class="glow-line"></div>
+
+    <script>
+        function openPayment() {
+            // பேமெண்ட் பாக்ஸ் கீழ இருந்து மேல வரும்
+            var modal = document.getElementById('paymentModal');
+            modal.style.display = 'flex';
+            modal.style.animation = 'slideUpFade 0.5s ease-out forwards';
+
+            // ஜிப் பாக்ஸ்-ம் கீழ இருந்து மேல வரும்
+            var zipBox = document.getElementById('zipBox');
+            zipBox.style.display = 'flex';
+            zipBox.style.animation = 'slideUpZip 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
+        }
+
+        function closePayment() {
+            document.getElementById('paymentModal').style.display = 'none';
+            document.getElementById('statusMsg').innerText = "";
+
+            // ஜிப் பாக்ஸ்-ஐ மறைக்க
+            var zipBox = document.getElementById('zipBox');
+            zipBox.style.display = 'none';
+        }
+
+        async function verifyTx() {
+            const tx = document.getElementById('txHash').value.trim();
+            const msg = document.getElementById('statusMsg');
+            
+            if (!tx || tx.length < 60) {
+                msg.style.color = "#ff4444";
+                msg.innerText = "Please enter a valid Transaction Hash.";
+                return;
+            }
+
+            msg.style.color = "#00b4ff";
+            msg.innerText = "Checking blockchain... Please wait...";
+            
+            try {
+                const res = await fetch('/api/verify-tx', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ txHash: tx })
+                });
+                const data = await res.json();
+                
+                if (data.ok) {
+                    msg.style.color = "#00ff88";
+                    msg.innerText = "Payment verified! Starting download...";
+                    setTimeout(() => {
+                        window.location.href = '/download/' + data.token;
+                    }, 1500);
+                } else {
+                    msg.style.color = "#ff4444";
+                    msg.innerText = "Error: " + data.error;
+                }
+            } catch (e) {
+                msg.style.color = "#ff4444";
+                msg.innerText = "Server error. Try again.";
+            }
+        }
+    </script>
+</body>
+</html>
