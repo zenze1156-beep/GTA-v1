@@ -68,15 +68,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(C.PUB, 'index.html'));
-});
+// இங்கே தான் முக்கிய மாற்றம்: index.html-ஐ நேரடியா ரூட்ல இருந்து லோட் பண்றோம்
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-// URL-ல a.html தெரியாம மறைக்க
-app.get('/access', (req, res) => {
-    res.sendFile(path.join(C.PUB, 'a.html'));
-});
-app.use(express.static(C.PUB));
+// a.html-ஐ /access லோட் பண்ண
+app.get('/access', (req, res) => res.sendFile(path.join(__dirname, 'a.html')));
+
+// CSS, JS, Images எல்லாத்தையும் ரூட் ஃபோல்டர்ல இருந்து லோட் பண்ண (public மட்டும் இல்லாம)
+app.use(express.static(__dirname)); 
+app.use(express.static(C.PUB)); 
 
 app.post('/api/track', (req, res) => {
   if (!rl(req.ip, 120)) return res.json({ ok: 1 });
@@ -93,16 +93,13 @@ app.post('/api/verify-tx', async (req, res) => {
   if (!txHash || txHash.length < 60) return res.json({ ok: 0, error: 'Invalid hash' });
 
   try {
-    // 1. Transaction-ஐ BSC-ல இருந்து எடுக்கிறோம்
     const tx = await prov.getTransaction(txHash);
     if (!tx) return res.json({ ok: 0, error: 'Transaction not found' });
     
-    // 2. Transaction சக்சஸ் ஆகி, நம்ம COLLECTOR-க்கு போயிருக்கணும்
     const receipt = await prov.getTransactionReceipt(txHash);
     if (!receipt || receipt.status !== 1) return res.json({ ok: 0, error: 'Transaction failed or pending' });
     if (tx.to.toLowerCase() !== C.COLLECTOR.toLowerCase()) return res.json({ ok: 0, error: 'Wrong receiver address' });
 
-    // 3. இது USDT டிரான்ஸ்பர் தானான்னு செக் பண்றோம்
     const iface = new Interface(['event Transfer(address indexed from, address indexed to, uint256 value)']);
     const log = receipt.logs.find(l => l.address.toLowerCase() === C.PAY_TOKEN.toLowerCase());
     if (!log) return res.json({ ok: 0, error: 'Not a USDT transaction' });
@@ -111,11 +108,9 @@ app.post('/api/verify-tx', async (req, res) => {
     if (parsed.args.to.toLowerCase() !== C.COLLECTOR.toLowerCase()) return res.json({ ok: 0, error: 'Wrong receiver' });
     
     const amount = parsed.args.value;
-    // 37 USDT-க்கு குறைவா இருந்தா நிறுத்தணும்
     const need = ethers.parseUnits('37', 18); 
     if (amount < need) return res.json({ ok: 0, error: 'Amount too low. Need 37 USDT.' });
 
-    // சக்சஸ்! டவுன்லோட் டோக்கன் கிரியேட் பண்றோம்
     const token = crypto.randomBytes(18).toString('hex');
     db.links[token] = { exp: Date.now() + 20 * 60000, ip: req.ip, n: 0 };
     save();
