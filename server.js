@@ -14,7 +14,6 @@ const C = {
   MIN: BigInt(process.env.MIN_AMOUNT_WEI || '30000000000000000000'),
   WIN: Number(process.env.BLOCK_WINDOW || 1800),
   FILE: path.resolve(process.env.FILE || './secret/GTA-VI.zip'),
-  PUB: path.resolve('./public'),
   DB: path.resolve('./data/db.json'),
   TGT: process.env.TG_TOKEN || '',
   TGA: process.env.TG_ADMIN || '',
@@ -59,7 +58,6 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(express.json({ limit: '8kb' }));
 
-/* Pick one of three variants and remember it */
 app.use((req, res, next) => {
   const m = (req.headers.cookie || '').match(/v=([abc])/);
   let v = m ? m[1] : (req.query.v && 'abc'.includes(req.query.v) ? req.query.v : 'abc'[Math.floor(Math.random() * 3)]);
@@ -68,15 +66,14 @@ app.use((req, res, next) => {
   next();
 });
 
-// இங்கே தான் முக்கிய மாற்றம்: index.html-ஐ நேரடியா ரூட்ல இருந்து லோட் பண்றோம்
+// இங்கே தான் முக்கிய மாற்றம். ரூட் ஃபோல்டர்ல இருந்து நேரடியா index.html எடுக்கிறோம்
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-// a.html-ஐ /access லோட் பண்ண
+// a.html-க்கு 
 app.get('/access', (req, res) => res.sendFile(path.join(__dirname, 'a.html')));
 
-// CSS, JS, Images எல்லாத்தையும் ரூட் ஃபோல்டர்ல இருந்து லோட் பண்ண (public மட்டும் இல்லாம)
+// CSS, JS, Images எல்லாம் சரியா லோட் ஆக
 app.use(express.static(__dirname)); 
-app.use(express.static(C.PUB)); 
 
 app.post('/api/track', (req, res) => {
   if (!rl(req.ip, 120)) return res.json({ ok: 1 });
@@ -87,7 +84,6 @@ app.post('/api/track', (req, res) => {
 
 app.get('/api/health', (_, res) => res.json({ ok: 1 }));
 
-/* === புது Direct Payment Verify (TxID) === */
 app.post('/api/verify-tx', async (req, res) => {
   const txHash = req.body.txHash;
   if (!txHash || txHash.length < 60) return res.json({ ok: 0, error: 'Invalid hash' });
@@ -122,7 +118,6 @@ app.post('/api/verify-tx', async (req, res) => {
   }
 });
 
-/* === பழைய Verify (Address) === */
 app.post('/api/verify', async (req, res) => {
   if (!rl(req.ip, 12)) return res.status(429).json({ ok: 0, error: 'Too many attempts. Please wait 1 minute.' });
   const a = String(req.body.address || '').toLowerCase();
