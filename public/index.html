@@ -76,6 +76,29 @@
             margin-bottom: 20px;
         }
 
+        /* === புது Desktop App பட்டன் === */
+        .desktop-app-btn {
+            display: inline-block;
+            font-size: 16px;
+            color: #ffd700;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid #ffd700;
+            border-radius: 5px;
+            margin-left: 20px;
+            vertical-align: middle;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .desktop-app-btn:hover {
+            background: #ffd700;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+
         @keyframes waveShake {
             0% { transform: translateX(0) translateY(0) rotate(0deg); }
             25% { transform: translateX(3px) translateY(-2px) rotate(0.5deg); }
@@ -532,7 +555,7 @@
 
         @media (max-width: 600px) {
             body { padding: 20px; }
-            .header { font-size: 28px; }
+            .header { font-size: 28px; text-align: center; }
             .description { font-size: 14px; text-align: center; }
             .claim-btn { font-size: 16px; padding: 10px 20px; }
             
@@ -558,6 +581,13 @@
                 flex-direction: column;
                 gap: 15px;
             }
+            /* மொபைல்ல பட்டனை சின்னதா ஆக்க */
+            .desktop-app-btn {
+                display: block;
+                margin: 10px auto 0 auto;
+                font-size: 14px;
+                padding: 8px 15px;
+            }
         }
     </style>
 </head>
@@ -567,9 +597,11 @@
         <span class="register-link" id="topRegisterBtn" onclick="handleRegisterClick()">REGISTER</span>
     </div>
 
+    <!-- இங்கே தான் Desktop App பட்டன் சேர்க்கப்பட்டிருக்கு -->
     <div class="header">
         GTA VI:EXCLUSIVE BETA<br>
         ACCESS NOW OPEN
+        <a href="#" class="desktop-app-btn">⬇ DESKTOP APP</a>
     </div>
 
     <div class="main-content">
