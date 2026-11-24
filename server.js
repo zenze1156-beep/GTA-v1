@@ -68,7 +68,14 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => res.sendFile(path.join(C.PUB, 'index.html')));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(C.PUB, 'index.html'));
+});
+
+// URL-ல a.html தெரியாம மறைக்க
+app.get('/access', (req, res) => {
+    res.sendFile(path.join(C.PUB, 'a.html'));
+});
 app.use(express.static(C.PUB));
 
 app.post('/api/track', (req, res) => {
