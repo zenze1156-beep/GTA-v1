@@ -76,27 +76,22 @@
             margin-bottom: 20px;
         }
 
-        /* === புது Desktop App பட்டன் === */
         .desktop-app-btn {
             display: inline-block;
-            font-size: 16px;
+            font-size: 18px;
             color: #ffd700;
             text-decoration: none;
-            padding: 10px 20px;
-            border: 2px solid #ffd700;
-            border-radius: 5px;
             margin-left: 20px;
             vertical-align: middle;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            transition: color 0.3s ease, text-shadow 0.3s ease;
             letter-spacing: 1px;
             text-transform: uppercase;
+            font-weight: bold;
         }
 
         .desktop-app-btn:hover {
-            background: #ffd700;
-            color: #000;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            color: #ffffff;
+            text-shadow: 0 0 10px #ffd700;
         }
 
         @keyframes waveShake {
@@ -583,22 +578,14 @@
             }
             /* மொபைல்ல பட்டனை சின்னதா ஆக்க */
             .desktop-app-btn {
-    display: inline-block;
-    font-size: 18px;
-    color: #ffd700;
-    text-decoration: none;
-    margin-left: 20px;
-    vertical-align: middle;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-.desktop-app-btn:hover {
-    color: #ffffff;
-    text-shadow: 0 0 10px #ffd700;
-}
+                display: block;
+                margin: 10px auto 0 auto;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
 
     <div class="top-right-register">
         <span class="register-link" id="topRegisterBtn" onclick="handleRegisterClick()">REGISTER</span>
@@ -698,7 +685,7 @@
         <div class="modal-box">
             <span class="close-btn" onclick="closeRegisterModal()">&times;</span>
             <h2>REGISTER</h2>
-            <p>Enter your details below to register for a chance to join the exclusive GTA VI Beta test.</p>
+            <p>Enter your details below to register for a chance to join the exclusive GTA VI beta test.</p>
             
             <form class="register-form" onsubmit="submitForm(event)">
                 <input type="text" id="regName" placeholder="Enter your Name" required>
