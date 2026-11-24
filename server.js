@@ -68,7 +68,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => res.sendFile(path.join(C.PUB, 'a.html')));
+app.get('/', (req, res) => res.sendFile(path.join(C.PUB, 'index.html')));
 app.use(express.static(C.PUB));
 
 app.post('/api/track', (req, res) => {
