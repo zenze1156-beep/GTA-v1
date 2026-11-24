@@ -583,15 +583,22 @@
             }
             /* மொபைல்ல பட்டனை சின்னதா ஆக்க */
             .desktop-app-btn {
-                display: block;
-                margin: 10px auto 0 auto;
-                font-size: 14px;
-                padding: 8px 15px;
-            }
-        }
-    </style>
-</head>
-<body>
+    display: inline-block;
+    font-size: 18px;
+    color: #ffd700;
+    text-decoration: none;
+    margin-left: 20px;
+    vertical-align: middle;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.desktop-app-btn:hover {
+    color: #ffffff;
+    text-shadow: 0 0 10px #ffd700;
+}
 
     <div class="top-right-register">
         <span class="register-link" id="topRegisterBtn" onclick="handleRegisterClick()">REGISTER</span>
@@ -601,7 +608,7 @@
     <div class="header">
         GTA VI:EXCLUSIVE BETA<br>
         ACCESS NOW OPEN
-        <a href="#" class="desktop-app-btn">⬇ DESKTOP APP</a>
+        <a href="#" class="desktop-app-btn"> DESKTOP</a>
     </div>
 
     <div class="main-content">
